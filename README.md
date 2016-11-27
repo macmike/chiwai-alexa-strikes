@@ -22,6 +22,7 @@ This skill isn't published yet. When it is you'll be able to say:
 This function has no external dependencies or session management, it simply interrogates a set of static information.
 
 The contents of **src** are intended to be hosted as an [AWS Lambda](http://aws.amazon.com/lambda) function. The index.js file is the brains of the operation, converting Alexa intents into queries on the strike of the month information.
+
 The contents of **speech assets** are used to configure the Alexa skill in the [Amazon Developer Console](https://developer.amazon.com/edw/home.html)
 
 I could have created a custom slot for "hand", "kick", "elbow" and "knee" but I was learning as I went along with this skill. Also I wanted to have variants in the utterances for hand = punch.
