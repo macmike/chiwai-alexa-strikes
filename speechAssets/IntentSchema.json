@@ -1,0 +1,10 @@
+{
+  "intents": [
+    {
+      "intent": "ChiWaiIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
