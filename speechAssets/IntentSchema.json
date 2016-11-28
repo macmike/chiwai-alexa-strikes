@@ -1,10 +1,39 @@
 {
   "intents": [
     {
-      "intent": "ChiWaiIntent"
+      "intent": "GetThisMonthsStrikes",
+      "slots": [
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        },
+        {
+          "name": "Strike",
+          "type": "Strike"
+        }
+      ]
     },
     {
-      "intent": "AMAZON.HelpIntent"
-    }
-  ]
+      "intent": "GetNextMonthsStrikes",
+      "slots": [
+        {
+          "name": "Strike",
+          "type": "Strike"
+        }
+      ]
+    },
+    {
+      "intent": "GetAMonthsStrikes",
+      "slots": [
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        },
+        {
+          "name": "Strike",
+          "type": "Strike"
+        }
+      ]      
+  	}    
+  ]  
 }

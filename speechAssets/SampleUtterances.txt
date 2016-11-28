@@ -1,34 +1,19 @@
-GetThisMonthsStrikes What are this month's strikes
-GetThisMonthsStrikes for this month's strikes
-GetThisMonthsStrikes list the strikes for this month
-GetThisMonthsStrikes for the strikes
-GetThisMonthsStrikes what are the strikes
-GetThisMonthsStrikes for the current strikes
-GetThisMonthsStrikes what are the current strikes
+GetThisMonthsStrikes whats this months {Strike} 
+GetThisMonthsStrikes for this months {Strike} 
+GetThisMonthsStrikes whats this months {Strike}
+GetThisMonthsStrikes for this months {Strike}
+GetThisMonthsStrikes whats this elements {Strike}
+GetThisMonthsStrikes for this elements {Strike}
+GetThisMonthsStrikes whats this elements 
+GetThisMonthsStrikes for this elements 
 
-GetThisMonthsHand what's this month's hand strike
-GetThisMonthsHand for this month's hand strike
-GetThisMonthsHand what's this month's punch
-GetThisMonthsHand for this month's punch
-GetThisMonthsKick what's this month's kick
-GetThisMonthsKick for this month's kick
-GetThisMonthsKick what's this month's foot strike
-GetThisMonthsKick for this month's foot strike
-GetThisMonthsElbow what's this month's elbow
-GetThisMonthsElbow for this month's elbow
-GetThisMonthsKnee what's this month's knee
-GetThisMonthsKnee for this month's knee
+GetNextMonthsStrikes What are next month's {Strike} 
+GetNextMonthsStrikes for next month's {Strike} 
+GetNextMonthsStrikes list the {Strike}  for next month
 
-GetAMonthsHand what's the hand strike for {Date}
-GetAMonthsHand what's the punch for {Date}
-GetAMonthsKick what's the kick for {Date}
-GetAMonthsKick what's the foot strike for {Date}
-GetAMonthsElbow what's the elbow for {Date}
-GetAMonthsKnee what's the knee for {Date}
-
-GetMonthlyStrikes What are the strikes for {Date}
-GetMonthlyStrikes give me the strikes for {Date}
-GetMonthlyStrikes list the strikes for {Date}
-GetMonthlyStrikes for the strikes for {Date}
-GetMonthlyStrikes what are {Date}'s strikes of the month
-GetMonthlyStrikes what are {Date}'s strikes
+GetAMonthsStrikes What are the {Strike} for {Date}
+GetAMonthsStrikes give me the {Strike} for {Date}
+GetAMonthsStrikes list the {Strike} for {Date}
+GetAMonthsStrikes for the {Strike} for {Date}
+GetAMonthsStrikes what is {Strike} of the month
+GetAMonthsStrikes what are {Date} {Strike} 

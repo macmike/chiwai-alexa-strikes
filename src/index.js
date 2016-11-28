@@ -1,12 +1,54 @@
 'use strict';
 
 /**
- * Simple Chi Wai responder!
+ * Chi Wai Strikes of the month skill
+ * by Mike MacDonagh
+ * 
  */
+ 
+var APP_ID = 'amzn1.ask.skill.72bfb826-f8a3-49c2-9ce8-11f3da06558a';
+
+
+// --------------- The strike information -----------------------
+ 
+var MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+    ];
+    
+var STRIKETYPES = ['Foot','Hand','Elbow','Knee'];
+
+const STR_STRIKES = 'strikes';
+
+var STRIKES = [
+        ['Back Heel', 'Hammer Fist', 'Hooking Elbow', 'Front Point'], 
+        ['Outer Crescent Kick', 'Lower Crane Wing', 'Upper Cut Elbow', 'Inner Knee'], 
+        ['Inner Crescent Kick', 'Mantis Fist', 'Inner Elbow', 'Outer Knee'], 
+        ['Front Kick', 'Kung Fu Fist', 'Top Elbow', 'Front Knee'], 
+        ['Roundhouse', 'Upper Crane Wing', 'Bottom Elbow', 'Top Knee'], 
+        ['Side Kick', 'Jab and Reverse', 'Elbow Point', 'Knee Point'], 
+        ['Hooking Kick', 'Chain Punch', 'Diagonal Elbow', 'Outer Knee'], 
+        ['Axe Kick', 'Ridge Hand and Kung Fu Fist', 'Inner Elbow', 'Inner Knee'], 
+        ['Push Kick', 'Hook and Mantis Strike', 'Back Elbow', 'Top Knee'], 
+        ['Hooking Heel', 'Upper Cut', 'Hooking Elbow', 'Front Knee'], 
+        ['Foot Exercises', 'Snap Punch', 'Top Elbow', 'Knee Point'], 
+        ['Inner Heel Kick', 'Back Fist', 'Elbow Point', 'Outer Knee'], 
+    ];
+ 
 
 // --------------- Helpers that build all of the responses -----------------------
 
-var APP_ID = 'amzn1.ask.skill.72bfb826-f8a3-49c2-9ce8-11f3da06558a';
+
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     return {
@@ -16,8 +58,8 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
         },
         card: {
             type: 'Simple',
-            title: `SessionSpeechlet - ${title}`,
-            content: `SessionSpeechlet - ${output}`,
+            title: `${title}`,
+            content: `${output}`,
         },
         reprompt: {
             outputSpeech: {
@@ -31,7 +73,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
 
 function buildResponse(sessionAttributes, speechletResponse) {
     return {
-        version: '1.0',
+        version: '2.0',
         sessionAttributes,
         response: speechletResponse,
     };
@@ -57,8 +99,7 @@ function getWelcomeResponse(callback) {
 
 function handleSessionEndRequest(callback) {
     const cardTitle = 'Session Ended';
-    const speechOutput = 'Thank you for talking to Chi Wai. Enjoy your training.';
-    // Setting this to true ends the session and exits the skill.
+    const speechOutput = 'Zoon Ching. Enjoy your training.';
     const shouldEndSession = true;
 
     callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));
@@ -66,14 +107,145 @@ function handleSessionEndRequest(callback) {
 
 
 
-function doChiWaiIntent(intent, session, callback) {
+
+
+// ---------------- Strikes of the month -------------------------//
+
+function currentMonthIndex(){
+    let aDate = new Date();
+    return aDate.getMonth();
+}
+
+function getIntentMonthIndex(intent)
+{
+    const requestMonthSlot = intent.slots.Date;
+    if (requestMonthSlot){    
+        let requestMonth = new Date(requestMonthSlot.value);
+        let monthIndex = requestMonth.getMonth();
+        return monthIndex;
+    } else {
+        return currentMonthIndex;
+    }    
+}
+
+function getIntentStrikeType(intent){
+
+    let requestStrike = STR_STRIKES;
+    const requestStrikeSlot = intent.slots.Strike;
+    if (requestStrikeSlot){    
+        requestStrike = requestStrikeSlot.value;
+        if (requestStrike === "punch"){
+            requestStrike = "hand";
+        } else if (requestStrike === "kick"){
+            requestStrike = "foot";
+        }
+    }
+    return requestStrike; 
+}
+
+function buildMonthIntroText(aMonthIndex)
+{
+    let monthText = MONTHS[aMonthIndex];
+    return `For the month of ${monthText}: `;
+}
+
+function buildStrikesTextForMonth(aMonthIndex){
+    
+        
+    let returnStr = buildMonthIntroText(aMonthIndex) + "\n" +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[0]) + "\n" +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[1]) + "\n" +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[2]) + ' and \n' +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[3]);
+        
+    return returnStr;
+}
+
+function buildSingleStrikeTextForMonth(aMonthIndex, aStrikeType){
+
+    let speechOutput = "";
+    let aStrikeTypeIndex = -1;
+    if (aStrikeType === STRIKES[0]){
+        aStrikeTypeIndex = 0;
+    } else if (aStrikeType === STRIKES[1]){
+        aStrikeTypeIndex = 1;    
+    } else if (aStrikeType === STRIKES[2]){
+        aStrikeTypeIndex = 2;
+    } else if (aStrikeType === STRIKES[3]){
+        aStrikeTypeIndex = 3;
+    }
+
+    if (aStrikeTypeIndex === -1)
+    {
+        speechOutput = null;
+    } else {
+        let strikeTypeText = STRIKETYPES[aStrikeTypeIndex];
+        let strikeText = STRIKES[aMonthIndex][aStrikeTypeIndex];
+        speechOutput = `The ${strikeTypeText} strike is ${strikeText}. `;    
+    }
+    return speechOutput;
+}
+
+
+function ___getAMonthsStrikes(intent, session, callback) {
+    let cardTitle = 'Chi Wai!';
+    const shouldEndSession = true;
+    let speechOutput = "";
+    
+    let aMonthIndex = getIntentMonthIndex(intent);
+    let aStrikeType = getIntentStrikeType(intent);
+
+    cardTitle = `aMonthIndex: ${aMonthIndex} and aStrikeType: ${aStrikeType}`;
+    
+    if (aStrikeType === STR_STRIKES){
+        speechOutput = buildStrikesTextForMonth(aMonthIndex);
+    } else if (aStrikeType) {
+        speechOutput = buildMonthIntroText(aMonthIndex) + buildSingleStrikeTextForMonth(aMonthIndex,aStrikeType);
+    } else {
+        speechOutput = "I'm sorry I didn't understand which strike you were asking for. Try foot, hand, elbow, knee, punch or kick.";
+    }
+    
+    //speechOutput = `Month index: ${aMonthIndex} and Strike type: ${aStrikeType}`;
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));      
+}
+
+function getThisMonthsStrikes(intent, session, callback) {
     const cardTitle = 'Chi Wai!';
-    const speechOutput = '"Chi Wai for the win!"';
-    // Setting this to true ends the session and exits the skill.
+    const shouldEndSession = true;
+    
+    let aMonthIndex = currentMonthIndex();
+    
+    let speechOutput = buildStrikesTextForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));       
+}
+
+function getNextMonthsStrikes(intent, session, callback) {
+    const cardTitle = 'Chi Wai!';
     const shouldEndSession = true;
 
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));  
+    let aMonthIndex = currentMonthIndex()+1;
+    if (aMonthIndex > 11) {
+        aMonthIndex = 0;
+    }    
+    
+    let speechOutput = buildStrikesTextForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));           
 }
+
+function getAMonthStrikes(intent, session, callback) {
+    const cardTitle = 'Chi Wai!';
+    const shouldEndSession = true;
+    
+    let aMonthIndex = getIntentMonthIndex(intent);
+    
+    //let speechOutput = "month index is " + aMonthIndex;
+    let speechOutput = buildStrikesTextForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));       
+}
+
 
 
 // --------------- Events -----------------------
@@ -95,6 +267,8 @@ function onLaunch(launchRequest, session, callback) {
     getWelcomeResponse(callback);
 }
 
+
+
 /**
  * Called when the user specifies an intent for this skill.
  */
@@ -105,9 +279,15 @@ function onIntent(intentRequest, session, callback) {
     const intentName = intentRequest.intent.name;
 
     
-    if (intentName === 'ChiWaiIntent') {
-        doChiWaiIntent(intent, session, callback);
-    } else if (intentName === 'AMAZON.HelpIntent') {
+    if (intentName === 'GetThisMonthsStrikes') {
+        getThisMonthsStrikes(intent, session, callback);
+    } else if (intentName === 'GetNextMonthsStrikes') {
+        getNextMonthsStrikes(intent, session, callback);    
+    } else if (intentName === 'GetAMonthStrikes') {
+        getAMonthStrikes(intent, session, callback);
+    } 
+    
+    else if (intentName === 'AMAZON.HelpIntent') {
         getWelcomeResponse(callback);
     } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
         handleSessionEndRequest(callback);
@@ -134,11 +314,7 @@ exports.handler = (event, context, callback) => {
     try {
         console.log(`event.session.application.applicationId=${event.session.application.applicationId}`);
 
-        /**
-         * Uncomment this if statement and populate with your skill's application ID to
-         * prevent someone else from configuring a skill that sends requests to this function.
-         */
-        
+     
         
         if (event.session.application.applicationId !== APP_ID) {
              callback('Invalid Application ID');
