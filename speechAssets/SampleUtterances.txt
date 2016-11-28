@@ -1,19 +1,37 @@
-GetThisMonthsStrikes whats this months {Strike} 
-GetThisMonthsStrikes for this months {Strike} 
-GetThisMonthsStrikes whats this months {Strike}
-GetThisMonthsStrikes for this months {Strike}
-GetThisMonthsStrikes whats this elements {Strike}
-GetThisMonthsStrikes for this elements {Strike}
-GetThisMonthsStrikes whats this elements 
-GetThisMonthsStrikes for this elements 
+GetAMonthStrikes for the strikes for {Date}
+GetAMonthStrikes for the strikes in {Date}
+GetAMonthStrikes for the strikes of the month in {Date}
+GetAMonthStrikes for the strikes of the month for {Date}
+GetAMonthStrikes what are the strikes in {Date}
+GetAMonthStrikes what are the strikes in {Date}
+GetAMonthStrikes to tell me the strikes for {Date}
 
-GetNextMonthsStrikes What are next month's {Strike} 
-GetNextMonthsStrikes for next month's {Strike} 
-GetNextMonthsStrikes list the {Strike}  for next month
+GetThisBlackBeltElement for this month's blackbelt element
+GetThisBlackBeltElement for the current blackbelt element
+GetThisBlackBeltElement for the blackbelt 
+GetThisBlackBeltElement what is the blackbelt element
 
-GetAMonthsStrikes What are the {Strike} for {Date}
-GetAMonthsStrikes give me the {Strike} for {Date}
-GetAMonthsStrikes list the {Strike} for {Date}
-GetAMonthsStrikes for the {Strike} for {Date}
-GetAMonthsStrikes what is {Strike} of the month
-GetAMonthsStrikes what are {Date} {Strike} 
+GetNextBlackBeltElement for the next blackbelt element
+GetNextBlackBeltElement for the next blackbelt 
+GetNextBlackBeltElement for next month's blackbelt element
+GetNextBlackBeltElement for next month's blackbelt
+
+GetAMonthBlackBelt for the blackbelt element in {Date}
+GetAMonthBlackBelt tell me the blackbelt element in {Date}
+
+GetThisMonthsStrikes for this months strikes
+GetThisMonthsStrikes for this elements strikes
+GetThisMonthsStrikes for the current strikes
+GetThisMonthsStrikes for the strikes of the month
+GetThisMonthsStrikes what are this months strikes
+GetThisMonthsStrikes what are this elements strikes
+GetThisMonthsStrikes to list the strikes of the month
+GetThisMonthsStrikes to list the current strikes
+GetThisMonthsStrikes to tell me the strikes of the month
+
+GetNextMonthsStrikes for next months strikes
+GetNextMonthsStrikes whats next months strikes
+GetNextMonthsStrikes what are next elements strikes
+GetNextMonthsStrikes for the next elements strikes
+GetNextMonthsStrikes to give me the next elements strikes
+GetNextMonthsStrikes to tell me the next elements strikes

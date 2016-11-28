@@ -44,6 +44,16 @@ var STRIKES = [
         ['Foot Exercises', 'Snap Punch', 'Top Elbow', 'Knee Point'], 
         ['Inner Heel Kick', 'Back Fist', 'Elbow Point', 'Outer Knee'], 
     ];
+
+
+var BLACKBELTELEMENTS = [
+    'Escrima Skills.',
+    'Power and Efficient Striking. Foot strikes for 1st Dans. Hand strikes for 2nd Dans.',
+    'Bo Staff Skills.',
+    'Multiple Attacks. Unarmed for 1st Dans. Armed for 2nd Dans.',
+    'Sticking Hands and or Wall Work.',
+    'Sparring and or grappling.',
+    ];
  
 
 // --------------- Helpers that build all of the responses -----------------------
@@ -149,14 +159,22 @@ function buildMonthIntroText(aMonthIndex)
     return `For the month of ${monthText}: `;
 }
 
+function buildBackBeltElementForMonth(aMonthIndex)
+{
+    if (aMonthIndex > 5) {aMonthIndex -= 6}
+    let elementText = BLACKBELTELEMENTS[aMonthIndex];
+    return `The Black Belt Element is ${elementText}`;
+}
+
+
 function buildStrikesTextForMonth(aMonthIndex){
     
         
-    let returnStr = buildMonthIntroText(aMonthIndex) + "\n" +
-                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[0]) + "\n" +
-                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[1]) + "\n" +
-                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[2]) + ' and \n' +
-                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[3]);
+    let returnStr = buildMonthIntroText(aMonthIndex) + " \n   " +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[0]) + ". \n   " +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[1]) + ". \n   " +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[2]) + '. \n   And ' +
+                    buildSingleStrikeTextForMonth(aMonthIndex,STRIKES[3]) + ".";
         
     return returnStr;
 }
@@ -181,7 +199,7 @@ function buildSingleStrikeTextForMonth(aMonthIndex, aStrikeType){
     } else {
         let strikeTypeText = STRIKETYPES[aStrikeTypeIndex];
         let strikeText = STRIKES[aMonthIndex][aStrikeTypeIndex];
-        speechOutput = `The ${strikeTypeText} strike is ${strikeText}. `;    
+        speechOutput = `The ${strikeTypeText} strike is ${strikeText}`;    
     }
     return speechOutput;
 }
@@ -210,7 +228,7 @@ function ___getAMonthsStrikes(intent, session, callback) {
 }
 
 function getThisMonthsStrikes(intent, session, callback) {
-    const cardTitle = 'Chi Wai!';
+    const cardTitle = 'Chi Wai! Strikes of the Month!';
     const shouldEndSession = true;
     
     let aMonthIndex = currentMonthIndex();
@@ -221,7 +239,7 @@ function getThisMonthsStrikes(intent, session, callback) {
 }
 
 function getNextMonthsStrikes(intent, session, callback) {
-    const cardTitle = 'Chi Wai!';
+    const cardTitle = 'Chi Wai! Strikes of the Month!';
     const shouldEndSession = true;
 
     let aMonthIndex = currentMonthIndex()+1;
@@ -235,7 +253,7 @@ function getNextMonthsStrikes(intent, session, callback) {
 }
 
 function getAMonthStrikes(intent, session, callback) {
-    const cardTitle = 'Chi Wai!';
+    const cardTitle = 'Chi Wai! Strikes of the Month!';
     const shouldEndSession = true;
     
     let aMonthIndex = getIntentMonthIndex(intent);
@@ -246,6 +264,44 @@ function getAMonthStrikes(intent, session, callback) {
     callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));       
 }
 
+function getThisBlackBeltElement(intent, session, callback) {
+    
+    const cardTitle = 'Chi Wai! Black Belt Element!';
+    const shouldEndSession = true;
+    let aMonthIndex = currentMonthIndex();
+    
+    let speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));          
+}
+
+
+function getNextBlackBeltElement(intent, session, callback) {
+    
+    const cardTitle = 'Chi Wai! Black Belt Element!';
+    const shouldEndSession = true;
+
+    let aMonthIndex = currentMonthIndex()+1;
+    if (aMonthIndex > 11) {
+        aMonthIndex = 0;
+    }     
+    
+    let speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));          
+}
+
+function getAMonthBlackBelt(intent, session, callback) {
+    
+    const cardTitle = 'Chi Wai! Black Belt Element!';
+    const shouldEndSession = true;
+
+    let aMonthIndex = getIntentMonthIndex(intent);
+        
+    let speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex);
+    
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));          
+}
 
 
 // --------------- Events -----------------------
@@ -279,15 +335,25 @@ function onIntent(intentRequest, session, callback) {
     const intentName = intentRequest.intent.name;
 
     
-    if (intentName === 'GetThisMonthsStrikes') {
-        getThisMonthsStrikes(intent, session, callback);
+    if (intentName === 'GetThisBlackBeltElement') {
+        getThisBlackBeltElement(intent, session, callback); 
+    } else if (intentName === 'GetNextBlackBeltElement') {
+        getNextBlackBeltElement(intent, session, callback);     
+    } else if (intentName === 'GetAMonthBlackBelt') {
+        getAMonthBlackBelt(intent, session, callback);     
+
+
     } else if (intentName === 'GetNextMonthsStrikes') {
         getNextMonthsStrikes(intent, session, callback);    
     } else if (intentName === 'GetAMonthStrikes') {
         getAMonthStrikes(intent, session, callback);
-    } 
+    } else if (intentName === 'GetThisMonthsStrikes') {
+        getThisMonthsStrikes(intent, session, callback);
+
+
+
     
-    else if (intentName === 'AMAZON.HelpIntent') {
+    } else if (intentName === 'AMAZON.HelpIntent') {
         getWelcomeResponse(callback);
     } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
         handleSessionEndRequest(callback);
