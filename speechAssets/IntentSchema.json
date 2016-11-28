@@ -1,34 +1,36 @@
 {
   "intents": [
     {
-      "intent": "GetAMonthStrikes",
+      "intent": "GetThisMonthsInfo",
       "slots": [
+        {
+          "name": "CWInfo",
+          "type": "CWInfoType"
+        }
+        ]
+    },
+    {
+	  "intent": "GetNextMonthsInfo",
+      "slots": [
+        {
+          "name": "CWInfo",
+          "type": "CWInfoType"
+        }                   
+    	]
+  	},
+    {
+	  "intent": "GetAMonthInfo",
+      "slots": [
+        {
+          "name": "CWInfo",
+          "type": "CWInfoType"
+        },
         {
           "name": "Date",
           "type": "AMAZON.DATE"
-        }       
-      ]      
-  	},  
-    {
-      "intent": "GetAMonthBlackBelt",
-      "slots": [
-        {
-          "name": "Date",
-          "type": "AMAZON.DATE"
-        }       
-      ]      
-  	},    	  
-    {
-      "intent": "GetThisMonthsStrikes"
-    },
-    {
-      "intent": "GetNextMonthsStrikes"
-    },
-    {
-      "intent": "GetThisBlackBeltElement"
-    },
-    {
-      "intent": "GetNextBlackBeltElement"
-    }
-  ]  
+        }         
+    	]
+  	}    
+    ]
 }
+    
