@@ -12,10 +12,7 @@ This skill isn't published yet. When it is you'll be able to say:
     User: "Alexa, Ask Chi Wai, what are this month's strikes?"
     User: "Alexa, Ask Chi Wai, what are next month's strikes?"
     User: "Alexa, Ask Chi Wai, what are the strikes for November?"
-    User: "Alexa, Ask Chi Wai, what's this month's punch?
-    User: "Alexa, Ask Chi Wai for this month's elbow.
-    User: "Alexa, Ask Chi Wai, what's January's kick?
-    User: "Alexa, Ask Chi Wai, what's the knee for December?
+
 
 ##Technical Details
 
@@ -25,5 +22,5 @@ The contents of **src** are intended to be hosted as an [AWS Lambda](http://aws.
 
 The contents of **speech assets** are used to configure the Alexa skill in the [Amazon Developer Console](https://developer.amazon.com/edw/home.html)
 
-I could have created a custom slot for "hand", "kick", "elbow" and "knee" but I was learning as I went along with this skill. Also I wanted to have variants in the utterances for hand = punch.
+
 
