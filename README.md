@@ -15,7 +15,7 @@ This skill isn't published yet. When it is you'll be able to say:
 
 
 ##Technical Details
-
+ 
 This function has no external dependencies or session management, it simply interrogates a set of static information.
 
 The contents of **src** are intended to be hosted as an [AWS Lambda](http://aws.amazon.com/lambda) function. The index.js file is the brains of the operation, converting Alexa intents into queries on the strike of the month information.
