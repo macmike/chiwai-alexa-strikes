@@ -12,6 +12,7 @@ This skill isn't published yet. When it is you'll be able to say:
     User: "Alexa, Ask Chi Wai, what are this month's strikes?"
     User: "Alexa, Ask Chi Wai, what are next month's strikes?"
     User: "Alexa, Ask Chi Wai, what are the strikes for November?"
+    User: "Alexa, Ask Chi Wai, for the current black belt element?"
 
 
 ##Technical Details
