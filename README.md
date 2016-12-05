@@ -1,7 +1,9 @@
 # Chi Wai Kung Fu AWS Lambda function for Alexa
 
 ## Chi Wai Kung Fu
-I'm a student at [Chi Wai Kung Fu Black belt Academy](http://chiwai.co.uk/) in Cheltenham, UK. Each month there's a different set of strikes to practice as well as the techniques and general training. This Alexa skill for Amazon Echo, Dot, Tap etc. knows all about the strikes of the month. It's a great reminder before you head out for training.
+I'm a student at [Chi Wai Kung Fu Black belt Academy](http://chiwai.co.uk/) in Cheltenham, UK. Each month there's a different set of strikes to practice as well as the techniques and general training. This Alexa skill for Amazon Echo, Dot, Tap etc. knows all about the strikes of the month and the black belt elements.
+
+It's a great reminder before you head out for training.
 
 ##Setup
 This skill isn't published yet. When it is you'll be able to say:
