@@ -10,16 +10,16 @@
         ]
     },
     {
-	  "intent": "GetNextMonthsInfo",
+    "intent": "GetNextMonthsInfo",
       "slots": [
         {
           "name": "CWInfo",
           "type": "CWInfoType"
         }                   
-    	]
-  	},
+      ]
+    },
     {
-	  "intent": "GetAMonthInfo",
+    "intent": "GetAMonthInfo",
       "slots": [
         {
           "name": "CWInfo",
@@ -29,8 +29,26 @@
           "name": "Date",
           "type": "AMAZON.DATE"
         }         
-    	]
-  	}    
+      ]
+    },
+    {
+      "intent": "ZoonChingIntent"
+    },     
+    {
+      "intent": "AMAZON.HelpIntent"
+    },   
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    }  
     ]
 }
     

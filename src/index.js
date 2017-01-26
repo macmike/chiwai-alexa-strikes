@@ -6,7 +6,10 @@
  * 
  */
  
-var APP_ID = 'amzn1.ask.skill.72bfb826-f8a3-49c2-9ce8-11f3da06558a';
+const APP_ID = 'amzn1.ask.skill.72bfb826-f8a3-49c2-9ce8-11f3da06558a';
+
+//if true then lots of logging will be generated
+const isDebug = false;
 
 
 // --------------- The strike information -----------------------
@@ -16,7 +19,7 @@ var MONTHS = [
     'February',
     'March',
     'April',
-    'May',
+    'May', 
     'June',
     'July',
     'August',
@@ -32,6 +35,9 @@ const STR_STRIKES = 'strikes';
 const STR_CURRENT = 'current';
 const STR_NEXT = 'next';
 const STR_SPECIFIC = 'specific';
+const STR_BLACK = 'black';
+const STR_NONE = 'none';
+const STR_OPENSESSIONREPROMPT = 'Please ask me another question about Chi Wai kung fu.';
 
 var STRIKES = [
         ['Back Heel', 'Hammer Fist', 'Hooking Elbow', 'Front Point'], 
@@ -64,6 +70,7 @@ var BLACKBELTELEMENTS = [
 
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
+    if (isDebug) {console.log(`buildSpeechletResponse(title:${title}, shouldEndSession:${shouldEndSession}, reprompt:${repromptText})`)}
     return {
         outputSpeech: {
             type: 'PlainText',
@@ -86,37 +93,12 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
 
 function buildResponse(sessionAttributes, speechletResponse) {
     return {
-        version: '2.0',
-        sessionAttributes,
+        version: '3.0',
         response: speechletResponse,
+        sessionAttributes: sessionAttributes,        
     };
 }
 
-
-// --------------- Functions that control the skill's behavior -----------------------
-
-function getWelcomeResponse(callback) {
-    // If we wanted to initialize the session to have some attributes we could add those here.
-    const sessionAttributes = {};
-    const cardTitle = 'Welcome';
-    const speechOutput = 'Welcome to Chi Wai. ' +
-        'Please ask me what the strikes of the month are, or the black belt element for any month';
-    // If the user either does not reply to the welcome message or says something that is not
-    // understood, they will be prompted again with this text.
-    const repromptText = 'Please ask me about the strikes of the month or the black belt element';
-    const shouldEndSession = false;
-
-    callback(sessionAttributes,
-        buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-}
-
-function handleSessionEndRequest(callback) {
-    const cardTitle = 'Session Ended';
-    const speechOutput = 'Zoon Ching. Enjoy your training.';
-    const shouldEndSession = true;
-
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));
-}
 
 
 
@@ -127,8 +109,7 @@ function currentMonthIndex(){
     return aDate.getMonth();
 }
 
-function getIntentMonthIndex(intent)
-{
+function getIntentMonthIndex(intent){
     const requestMonthSlot = intent.slots.Date;
     if (requestMonthSlot){    
         let requestMonth = new Date(requestMonthSlot.value);
@@ -139,17 +120,34 @@ function getIntentMonthIndex(intent)
     }    
 }
 
+function getCWInfoType(cwInfoSlot){
+    //deal with chi wai requests
+    let cwInfo = STR_NONE; 
+    if (cwInfoSlot){    
+        cwInfo = cwInfoSlot.value;
+        if (cwInfo){
+            if (isDebug) {console.log(`getCWInfoType(${cwInfo})`)}
+            if (cwInfo.includes("black") || cwInfo.includes("belt") || cwInfo.includes("bible")){
+                cwInfo = STR_BLACK;
+            } else if (cwInfo.includes("strike") || cwInfo.includes("stripe") || cwInfo.includes("strait") || cwInfo.includes("stroke")) {
+                cwInfo = STR_STRIKES;
+            }
+        }
+        
+    }
+    if (isDebug) {console.log(`getCWInfoType:: result = ${cwInfo}`)}
+    return cwInfo;
+}
+
 
 // ---------------- text builders -------------------------//
 
-function buildMonthIntroText(aMonthIndex)
-{
+function buildMonthIntroText(aMonthIndex){
     let monthText = MONTHS[aMonthIndex];
     return `For the month of ${monthText}: `;
 }
 
-function buildBackBeltElementForMonth(aMonthIndex)
-{
+function buildBackBeltElementForMonth(aMonthIndex){
     if (aMonthIndex > 5) {aMonthIndex -= 6}
     let elementText = BLACKBELTELEMENTS[aMonthIndex];
     return `The Black Belt Element is ${elementText}`;
@@ -193,54 +191,109 @@ function buildStrikesTextForMonth(aMonthIndex){
     return returnStr;
 }
 
-// ---------------- text builders -------------------------//
+// --------------- Session helper ----------------------------//
 
-
-function ___getAMonthsStrikes(intent, session, callback) {
-    let cardTitle = 'Chi Wai!';
-    const shouldEndSession = true;
-    let speechOutput = "";
+function recreateSessionAttributes(session){
     
-    let aMonthIndex = getIntentMonthIndex(intent);
-    let aStrikeType = getIntentStrikeType(intent);
-
-    cardTitle = `aMonthIndex: ${aMonthIndex} and aStrikeType: ${aStrikeType}`;
     
-    if (aStrikeType === STR_STRIKES){
-        speechOutput = buildStrikesTextForMonth(aMonthIndex);
-    } else if (aStrikeType) {
-        speechOutput = buildMonthIntroText(aMonthIndex) + buildSingleStrikeTextForMonth(aMonthIndex,aStrikeType);
+    if (!session.attributes) {session.attributes = {}}
+    let sessionAttributes = session.attributes;
+    if (sessionAttributes && sessionAttributes.isOpenSession){
+        let newIsOpenSession = sessionAttributes.isOpenSession;
+        sessionAttributes = {"isOpenSession": newIsOpenSession};
     } else {
-        speechOutput = "I'm sorry I didn't understand which strike you were asking for. Try foot, hand, elbow, knee, punch or kick.";
+        sessionAttributes = {"isOpenSession": false};
     }
     
-    //speechOutput = `Month index: ${aMonthIndex} and Strike type: ${aStrikeType}`;
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));      
+    if (isDebug) {console.log(`recreateSessionAttributes::recreated isOpenSession attr = ${sessionAttributes.isOpenSession}`)}
+    session.attributes = sessionAttributes;
+    return sessionAttributes;
+}
+
+function getRepromptText(sessionAttributes){
+    let result = null;
+    if (sessionAttributes.isOpenSession){
+        result = STR_OPENSESSIONREPROMPT;
+    } 
+    if (isDebug) {console.log(`getRepromptText() = ${result}`)}
+    return result;
+}
+
+// ---------------- intent responses -------------------------//
+
+function getWelcomeResponse(callback) {
+    if (isDebug) {console.log("getWelcomeResponse()")}
+
+    let sessionAttributes = {"isOpenSession":true};
+        
+    const cardTitle = 'Welcome';
+    const speechOutput = 'Welcome to Chi Wai. ' +
+        'Please ask me what the strikes of the month are, or the black belt element for any month';
+        
+    // If the user either does not reply to the welcome message or says something that is not
+    // understood, they will be prompted again with this text.
+    const repromptText = 'Please ask me about the strikes of the month or the black belt element for any month';
+    const shouldEndSession = false;
+
+    if (isDebug) {console.log(`getWelcomeResponse::isOpenSession attr = ${sessionAttributes.isOpenSession}`)}
+
+    callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+}
+
+function handleSessionEndRequest(callback) {
+    if (isDebug) {console.log("handleSessionEndRequest")}
+    
+    const cardTitle = 'Session Ended';
+    const speechOutput = 'Zoon Ching. Enjoy your training.';
+    const shouldEndSession = true;
+
+    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));
+}
+
+
+function getZoonChingResponse(intent, session, callback){
+    if (isDebug) {console.log(`getZoonChingResponse`)}
+    const cardTitle = `Chi Wai! Zoon Ching!`;
+    const speechOutput = "Zoon Ching! That means respect. Traditionally we say it at the beginning and end of training.";
+    let sessionAttributes = recreateSessionAttributes(session);
+    
+    callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));
 }
 
 function getAMonthStrikes(intent, session, callback, aMonthIndex) {
-    const shouldEndSession = true;
+    
+    if (isDebug) {console.log(`getAMonthStrikes(${aMonthIndex + 1})`)}
+    
+    let sessionAttributes = recreateSessionAttributes(session);
+    if (isDebug) {console.log("getAMonthStrikes::sessionAttributes.isOpenSession attr = " + sessionAttributes.isOpenSession)}
+    
     const monthText = MONTHS[aMonthIndex];
     const cardTitle = `Chi Wai! ${monthText} Strikes of the Month!`;
     const speechOutput = buildStrikesTextForMonth(aMonthIndex);
     
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));       
+    callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));
 }
 
 function getAMonthBlackBelt(intent, session, callback, aMonthIndex) {
     
-    const shouldEndSession = true;
+    if (isDebug) {console.log(`getAMonthBlackBelt(${aMonthIndex + 1})`)}
+    
+    let sessionAttributes = recreateSessionAttributes(session);
+    
+    if (isDebug) {console.log("getAMonthBlackBelt::sessionAttributes.isOpenSession = " + sessionAttributes.isOpenSession)}
+    
     const monthText = MONTHS[aMonthIndex];
     const cardTitle = `Chi Wai ${monthText} Black Belt Element!`;    
     const speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex);
     
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));          
+    callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));   
 }
 
 function getChiWaiInfo(intent, session, callback, timePeriod) {
     
+    if (isDebug) {console.log(`getChiWaiInfo(${timePeriod})`)}
+    
     let cardTitle = 'Chi Wai!';
-    let shouldEndSession = true;
     let repromptText = null;
     let speechOutput = null;
     let aMonthIndex = -1;
@@ -251,38 +304,30 @@ function getChiWaiInfo(intent, session, callback, timePeriod) {
     } else if (timePeriod === STR_NEXT) {
         aMonthIndex = currentMonthIndex()+1;
         if (aMonthIndex > 11) {
-         aMonthIndex = 0;
+          aMonthIndex = 0;
         }     
     }
+    if (isDebug) {console.log(`getChiWaiInfo::aMonthIndex = ${aMonthIndex+1}`)}
 
-    let cwInfo = "none";
-    const cwInfoSlot = intent.slots.CWInfo;
+    let cwInfo = getCWInfoType(intent.slots.CWInfo);
+    if (cwInfo === STR_BLACK){    
+        //do black belt element
+        getAMonthBlackBelt(intent, session, callback, aMonthIndex);
+        return;        
+    } else if (cwInfo === STR_STRIKES) {
+        //do monthly strikes
+        getAMonthStrikes(intent, session, callback, aMonthIndex);  
+        return;        
+    } else {
+        //deal with errors
+        let sessionAttributes = recreateSessionAttributes(session);
 
-    //deal with chi wai requests
-    if (cwInfoSlot){    
-        cwInfo = cwInfoSlot.value;
-        if ((cwInfo === "strikes") || (cwInfo === "strikes of the month")){
-          getAMonthStrikes(intent, session, callback, aMonthIndex);
-          return;
-        } else if ((cwInfo === "blackbelt element") || (cwInfo === "black belt element")){
-          getAMonthBlackBelt(intent, session, callback, aMonthIndex);
-          return;
-        } else {
-            cwInfo = "none";
-        }
-    }
-    
-    //deal with errors
-    if (cwInfo === "none")
-    {
         cwInfo = null;
         repromptText = "Would you like the strikes of the month or the blackbelt element?";
         speechOutput = "Sorry I didn't hear you properly. " + repromptText;
-        shouldEndSession = false;
+        callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, false));                       
     }
         
-    
-    callback({}, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));              
     
 }
 
@@ -307,15 +352,16 @@ function onLaunch(launchRequest, session, callback) {
 }
 
 
-
 /**
  * Called when the user specifies an intent for this skill.
  */
 function onIntent(intentRequest, session, callback) {
-    console.log(`onIntent requestId=${intentRequest.requestId}, sessionId=${session.sessionId}`);
-
+    
     const intent = intentRequest.intent;
     const intentName = intentRequest.intent.name;
+    
+    if (isDebug) {console.log(`onIntent(${intentName})`)}
+
     
     if (intentName === 'GetThisMonthsInfo') {
         getChiWaiInfo(intent, session, callback, STR_CURRENT); 
@@ -323,10 +369,11 @@ function onIntent(intentRequest, session, callback) {
         getChiWaiInfo(intent, session, callback, STR_NEXT); 
     } else if (intentName === 'GetAMonthInfo'){
         getChiWaiInfo(intent, session, callback, STR_SPECIFIC); 
-   
+    } else if (intentName === 'ZoonChingIntent'){
+        getZoonChingResponse(intent, session, callback);
     } else if (intentName === 'AMAZON.HelpIntent') {
         getWelcomeResponse(callback);
-    } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
+    } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent' || intentName === 'AMAZON.NoIntent') {
         handleSessionEndRequest(callback);
     } else {
         throw new Error('Invalid intent');

@@ -1,3 +1,4 @@
+GetThisMonthsInfo for the {CWInfo} of the month
 GetThisMonthsInfo for this months {CWInfo}
 GetThisMonthsInfo for the current {CWInfo}
 GetThisMonthsInfo for the {CWInfo}
@@ -6,16 +7,15 @@ GetThisMonthsInfo to tell me current {CWInfo}
 GetThisMonthsInfo to give me the {CWInfo}
 GetThisMonthsInfo what are the {CWInfo}
 GetThisMonthsInfo what is the {CWInfo}
-
-GetNextMonthsInfo for next months {CWInfo}
+GetNextMonthsInfo for next month's {CWInfo}
 GetNextMonthsInfo for the next {CWInfo}
 GetNextMonthsInfo to list the next {CWInfo}
 GetNextMonthsInfo to tell me next {CWInfo}
 GetNextMonthsInfo to give me the next {CWInfo}
 GetNextMonthsInfo what are the next {CWInfo}
 GetNextMonthsInfo what is the next {CWInfo}
-
 GetAMonthInfo for the {CWInfo} for {Date}
+GetAMonthInfo for the {CWInfo} in {Date}
 GetAMonthInfo tell me the {CWInfo} for {Date}
 GetAMonthInfo give me the {CWInfo} for {Date}
 GetAMonthInfo what are the {CWInfo} for {Date}
@@ -25,3 +25,5 @@ GetAMonthInfo what's the {CWInfo} for {Date}
 GetAMonthInfo for {Date} what are the {CWInfo}
 GetAMonthInfo for {Date} what is the {CWInfo}
 GetAMonthInfo for {Date} what's {CWInfo}
+ZoonChingIntent Zoon Ching
+
