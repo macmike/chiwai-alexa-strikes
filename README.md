@@ -17,10 +17,21 @@ This skill isn't published yet. When it is you'll be able to say:
     
     User: "Alexa, Ask Chi Wai, for the current black belt element?"
     User: "Alexa, Ask Chi Wai, for next months black belt element?"
+    User: "Alexa, Ask Chi Wai, for the black belt element in August?"
+        
+You can also use it in interactive mode:
 
+    User: "Alexa, talk to Chi Wai"
+    Skill: ....
+    User: "Zoon Ching"
+    Skill: ....
+    User: "What are next month's strikes?"
+	Skill: ....
+	User: "What's next month's black belt element?"
+    
 ##Technical Details
  
-This function has no external dependencies or session management, it simply interrogates a set of static information.
+This function has no external dependencies and very limited session management, it simply interrogates a set of static information.
 
 The contents of **src** are intended to be hosted as an [AWS Lambda](http://aws.amazon.com/lambda) function. The index.js file is the brains of the operation, converting Alexa intents into queries on the strike of the month information.
 
