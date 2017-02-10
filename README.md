@@ -3,6 +3,8 @@
 ## Chi Wai Kung Fu
 I'm a student at [Chi Wai Kung Fu Black belt Academy](http://chiwai.co.uk/) in Cheltenham, UK. Each month there's a different set of strikes to practice as well as the techniques and general training. This Alexa skill for Amazon Echo, Dot, Tap etc. knows all about the strikes of the month and the black belt elements.
 
+![Alexa Chi Wai banner](https://mikemacd.files.wordpress.com/2017/02/chiwai_alexa_out.png?w=630&h=236) 
+
 It's a great reminder before you head out for training.
 
 Here's a [blog about the club](https://mikemacd.wordpress.com/2017/01/18/chi-wai-kung-fu-cheltenham-now-with-extra-tech-alexa/) I wrote.
