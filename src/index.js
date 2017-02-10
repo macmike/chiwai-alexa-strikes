@@ -37,7 +37,8 @@ const STR_NEXT = 'next';
 const STR_SPECIFIC = 'specific';
 const STR_BLACK = 'black';
 const STR_NONE = 'none';
-const STR_OPENSESSIONREPROMPT = 'Please ask me another question about Chi Wai kung fu.';
+const STR_OPENSESSION_PROMPT = '\nPlease ask me another kung fu question.';
+const STR_OPENSESSIONREPROMPT = 'Please ask me another question about Chi Wai kung fu strikes of the month or black belt elements.';
 
 var STRIKES = [
         ['Back Heel', 'Hammer Fist', 'Hooking Elbow', 'Front Point'], 
@@ -93,7 +94,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
 
 function buildResponse(sessionAttributes, speechletResponse) {
     return {
-        version: '3.0',
+        version: '2.0',
         response: speechletResponse,
         sessionAttributes: sessionAttributes,        
     };
@@ -127,15 +128,16 @@ function getCWInfoType(cwInfoSlot){
         cwInfo = cwInfoSlot.value;
         if (cwInfo){
             if (isDebug) {console.log(`getCWInfoType(${cwInfo})`)}
-            if (cwInfo.includes("black") || cwInfo.includes("belt") || cwInfo.includes("bible")){
+            if (cwInfo.includes("black") || cwInfo.includes("belt") || cwInfo.includes("bible") || cwInfo.includes("bell")){
                 cwInfo = STR_BLACK;
-            } else if (cwInfo.includes("strike") || cwInfo.includes("stripe") || cwInfo.includes("strait") || cwInfo.includes("stroke")) {
+            } else if (cwInfo.includes("strike") || cwInfo.includes("stripe") || cwInfo.includes("strait") || cwInfo.includes("stroke") || cwInfo.includes("streit")) {
                 cwInfo = STR_STRIKES;
             }
         }
         
     }
     if (isDebug) {console.log(`getCWInfoType:: result = ${cwInfo}`)}
+    if (cwInfo === STR_NONE) {console.log(`getCWInfoType(${cwInfo}) failed to understand: cwInfoSlot.value`)}
     return cwInfo;
 }
 
@@ -219,6 +221,15 @@ function getRepromptText(sessionAttributes){
     return result;
 }
 
+function getFollowOnQuestionText(sessionAttributes){
+    let result = "";
+    if (sessionAttributes.isOpenSession){
+        result = STR_OPENSESSION_PROMPT;
+    } 
+    if (isDebug) {console.log(`getRepromptText() = ${result}`)}
+    return result;
+}
+
 // ---------------- intent responses -------------------------//
 
 function getWelcomeResponse(callback) {
@@ -253,9 +264,10 @@ function handleSessionEndRequest(callback) {
 
 function getZoonChingResponse(intent, session, callback){
     if (isDebug) {console.log(`getZoonChingResponse`)}
-    const cardTitle = `Chi Wai! Zoon Ching!`;
-    const speechOutput = "Zoon Ching! That means respect. Traditionally we say it at the beginning and end of training.";
     let sessionAttributes = recreateSessionAttributes(session);
+    
+    const cardTitle = `Chi Wai! Zoon Ching!`;
+    const speechOutput = "Zoon Ching! That means respect. Traditionally we say it at the beginning and end of training." + getFollowOnQuestionText(sessionAttributes);
     
     callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));
 }
@@ -269,7 +281,7 @@ function getAMonthStrikes(intent, session, callback, aMonthIndex) {
     
     const monthText = MONTHS[aMonthIndex];
     const cardTitle = `Chi Wai! ${monthText} Strikes of the Month!`;
-    const speechOutput = buildStrikesTextForMonth(aMonthIndex);
+    const speechOutput = buildStrikesTextForMonth(aMonthIndex) + getFollowOnQuestionText(sessionAttributes);
     
     callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));
 }
@@ -284,7 +296,7 @@ function getAMonthBlackBelt(intent, session, callback, aMonthIndex) {
     
     const monthText = MONTHS[aMonthIndex];
     const cardTitle = `Chi Wai ${monthText} Black Belt Element!`;    
-    const speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex);
+    const speechOutput = buildMonthIntroText(aMonthIndex) + " \n " + buildBackBeltElementForMonth(aMonthIndex) + getFollowOnQuestionText(sessionAttributes);
     
     callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, getRepromptText(sessionAttributes), !sessionAttributes.isOpenSession));   
 }

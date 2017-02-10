@@ -5,10 +5,15 @@ I'm a student at [Chi Wai Kung Fu Black belt Academy](http://chiwai.co.uk/) in C
 
 It's a great reminder before you head out for training.
 
+Here's a [blog about the club](https://mikemacd.wordpress.com/2017/01/18/chi-wai-kung-fu-cheltenham-now-with-extra-tech-alexa/) I wrote.
+
 ##Setup
-This skill isn't published yet. When it is you'll be able to say:
+This skill is live in the the UK. If you're in the UK then you can simply say:
 
     User : "Alexa, enable skill Chi Wai"
+    
+Or, search for "ChiWai" in the Alexa app.
+You can also enable from [Amazon.co.uk](https://www.amazon.co.uk/dp/B01MR89DZ4) directly.
 
 ## Examples
     User: "Alexa, Ask Chi Wai, what are this month's strikes?"
